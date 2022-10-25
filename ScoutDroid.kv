@@ -1,0 +1,49 @@
+WindowManager:
+    MainScreenPageApp:
+    PlotScreenPageApp:
+
+
+<MainScreenPageApp>:
+    name: "main"
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba:(1,1,1,1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        rows: 3
+        cols: 1
+
+        Label:
+            text: "Scout Droid"
+            font_size: 64
+            color: "black"
+
+        Button:
+            id: "btnCreate"
+            name: "mainPage"
+            text: "Create New"
+            font_size: 50
+            on_release: app.root.current = "plotPage"
+
+
+        Button:
+            id: "btnLoad"
+            text: "Load"
+            font_size: 50
+
+
+<PlotScreenPageApp>:
+    name: "plotPage"
+    canvas:
+        Rectangle:
+            source: 'images/basketball_court.png'
+            pos: self.pos
+            size: self.size
+
+
+
+
+
