@@ -1,0 +1,194 @@
+#:import utils kivy.utils
+<WindowManager>:
+    MainScreen:
+    PlotScreen:
+    VisualScreen:
+
+
+<MainScreen>:
+    name: 'main'
+    MDBoxLayout:
+        orientation: 'vertical'
+        height: self.minimum_height
+        MDBoxLayout:
+            orientation: 'vertical'
+            Image:
+                source: 'images/logo.png'
+                pos_hint: {"center_x": 0.5, "center_y": .5}
+                size_width: 800
+                allow_stretch: True
+                keep_ratio: True
+
+        MDBoxLayout:
+            MDCard:
+                size_hint: .7, 1
+                pos_hint: {"center_x": .5, "center_y": .5}
+                elevation: 5
+                radius: 20
+                md_bg_color: 246/255,245/255,241/255
+
+                MDFloatLayout:
+                    Widget:
+                    Button:
+                        background_normal: 'images/dataset.png'
+                        background_down: 'images/dataset_clicked.png'
+                        size_hint: None, None
+                        pos_hint: {'x': .1, 'y': .5}
+                        on_release: app.root.current = 'plot'
+                    MDLabel:
+                        color: 144/255,163/255,167/255
+                        text: "Data Gathering"
+                        pos_hint: {'center_x': 1.02, 'y': .32}
+                        font_style: 'Subtitle2'
+                    MDLabel:
+                        color: 147/255,84/255,48/255
+                        text: "Start Plotting"
+                        pos_hint: {'center_x': 1.02, 'y': .25}
+                        font_style: 'Button'
+                    MDLabel:
+                        text: "save the data points into \ncsv file and save scatter \nplot output"
+                        color: 144/255,163/255,167/255
+                        pos_hint: {'center_x': 1.02, 'y': .13}
+                        font_size: 10
+                        font_style: 'Caption'
+                    Widget:
+                    Button:
+                        background_normal: 'images/visualization.png'
+                        background_down: 'images/visualization_clicked.png'
+                        size_hint: None, None
+                        pos_hint: {'x': .1, 'y': .1}
+                        on_release: app.root.current = 'visual'
+                    MDLabel:
+                        color: 144/255,163/255,167/255
+                        text: "Visualization"
+                        pos_hint: {'center_x': 1.02, 'top': .93}
+                        font_style: 'Subtitle2'
+                        text_size: self.width, None
+                    MDLabel:
+                        color: 147/255,84/255,48/255
+                        text: "Get Data Visualization"
+                        pos_hint: {'center_x': 1, 'top': .85}
+                        font_size: 15
+                        font_style: 'Button'
+                    MDLabel:
+                        color: 144/255,163/255,167/255
+                        text: "get the data points and start \nclustering to see results \nof a player"
+                        font_size: 10
+                        font_style: 'Caption'
+                        pos_hint: {'center_x': 1.02, 'top': .72}
+
+<PlotScreen>:
+    name: 'plot'
+    MDBottomNavigation:
+        z: -1
+        MDBottomNavigationItem:
+            name: "btnSave"
+            text: "Save"
+            icon: "images/save.png"
+            selected_color_background: 147/255,84/255,48/255
+            on_tab_release: root.show_save()
+
+        MDBottomNavigationItem:
+            name: "btnClear"
+            text: "Clear Screen"
+            icon: "images/clear.png"
+            selected_color_background: 147/255,84/255,48/255
+            on_tab_release: root.clear_drawing()
+
+        MDBottomNavigationItem:
+            name: "btnBack"
+            text: "Home"
+            icon: "images/home.png"
+            selected_color_background: 147/255,84/255,48/255
+            on_tab_release: app.root.current = 'main'
+
+    MDBoxLayout:
+        size_hint: None, None
+        size: area_img.size
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        Court:
+            id: area_img
+            source: 'images/half-court.png'
+            size: self.texture_size
+            z: 1
+
+<VisualScreen>:
+    name: 'visual'
+    MDBoxLayout:
+        size_hint: 1, 1
+        MDBoxLayout:
+            id: graph
+        MDBoxLayout:
+            size_hint_y: None
+            height: 50
+
+    MDBottomNavigation:
+        MDBottomNavigationItem:
+            name: "btnLoad"
+            text: "Get Dataset"
+            selected_color_background: 147/255,84/255,48/255
+            icon: "images/analysis.png"
+            on_tab_release: root.show_load()
+
+        MDBottomNavigationItem:
+            name: "btnSave"
+            text: "Save"
+            selected_color_background: 147/255,84/255,48/255
+            icon: "images/save.png"
+            on_tab_release: root.show_save()
+
+        MDBottomNavigationItem:
+            name: "btnBack"
+            text: "Home"
+            icon: "images/home.png"
+            selected_color_background: 147/255,84/255,48/255
+            on_tab_release: app.root.current = 'main'
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            path: app.user_data_dir
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)
+
+<SaveDialog>:
+    text_input: text_input
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            path: app.user_data_dir
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+
+        TextInput:
+            id: text_input
+            size_hint_y: None
+            height: 50
+            font_size: 35
+            multiline: False
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Save"
+                on_release: root.save(filechooser.path, text_input.text)
